@@ -14,30 +14,21 @@
 			</div>
 			<div class="col-9 bg-light" style="position:relative">
 				<div class="h-100 p-3" style="overflow-x:hidden;overflow-y:scroll">
-					<div><p>bla bla bla ...</p></div>
-                    <div><p>bla bla bla ...</p></div>
-                    <div><p>bla bla bla ...</p></div>
-                    <div><p>bla bla bla ...</p></div>
-                    <div><p>bla bla bla ...</p></div>
-                    <div><p>bla bla bla ...</p></div>
-                    <div><p>bla bla bla ...</p></div>
-                    <div><p>bla bla bla ...</p></div>
-                    <div><p>bla bla bla ...</p></div>
-                    <div><p>bla bla bla ...</p></div>
-                    <div><p>bla bla bla ...</p></div>
-                    <div><p>bla bla bla ...</p></div>
-                    <div><p>bla bla bla ...</p></div>
-                    <div><p>bla bla bla ...</p></div>
-                    <div><p>bla bla bla ...</p></div>
-                    <div><p>bla bla bla ...</p></div>
-                    <div><p>bla bla bla ...</p></div>
-                    <div><p>bla bla bla ...</p></div>
-                    <div><p>bla bla bla ...</p></div>
-                    <div><p>bla bla bla ...</p></div>
+					{% for message in messages %}
+						<div>
+							<div>
+								<div><b>{{message.user.prenom}}
+									{{message.user.nom}}</b></div>
+								<div>{{message.contenu}}</div>
+								<div><small>{{message.date | date('d/m/Y à H:i')}}</small></div>
+
+							</div>
+						</div>
+					{% endfor %}
 				</div>
 				<div class="input-group" style="position:absolute;bottom:0">
 					<textarea class="form-control"></textarea>
-                    <button class="btn btn-primary">Envoyer</button>
+					<button class="btn btn-primary">Envoyer</button>
 				</div>
 			</div>
 		</div>
