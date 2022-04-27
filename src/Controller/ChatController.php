@@ -2,16 +2,20 @@
 
 namespace App\Controller;
 
+use App\Entity\Message;
+use App\Form\MessageType;
 use App\Repository\MessageRepository;
 use App\Repository\UserRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 class ChatController extends AbstractController
 {
     #[Route('/chat', name: 'chat_index')]
-    public function index(MessageRepository $repoMessage, UserRepository $repoUser): Response
+    public function index(MessageRepository $repoMessage, UserRepository $repoUser, Request $request, EntityManagerInterface $entity): Response
     {
         //Récupére tous les messages par date desc
         $messages = $repoMessage->findby([], ['date' => 'desc']);
@@ -19,9 +23,36 @@ class ChatController extends AbstractController
         //Récupére tous les utilisateurs
         $utilisateurs = $repoUser->findAll();
 
+        //Nouveau message
+        $message = new Message();
+        //Formulaire relié à l'éntité Message
+        $formMessage = $this->createForm(MessageType::class, $message);
+
+        //Analyse
+        $formMessage->handleRequest($request);
+        if($formMessage->isSubmitted() && $formMessage->isValid())
+        {
+            //Modification
+            $message->setUser($this->getUser())
+                    ->setDate(new \DateTime());
+
+            //Enregistrement en BDD
+            $entity->persist($message);
+            $entity->flush();
+
+            return $this->redirectToRoute('chat_index');
+
+        }
+
         return $this->render('chat/index.html.twig', [
             'messages' => $messages,
-            'utilisateurs' => $utilisateurs
+            'utilisateurs' => $utilisateurs,
+            'formMessage' => $formMessage->createView()
         ]);
     }
+
+
+   
+
+
 }

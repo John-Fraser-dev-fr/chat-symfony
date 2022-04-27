@@ -18,7 +18,7 @@
                     </div>
                 {% endfor %}
 			</div>
-			<div class="col-9 bg-light" style="position:relative">
+			<div class="col-9 h-100 bg-light" >
 				<div class="h-100 p-3" style="overflow-x:hidden;overflow-y:scroll">
 					{% for message in messages %}
 							<div class="bg-white mb-3">
@@ -30,10 +30,17 @@
 							</div>
 					{% endfor %}
 				</div>
-				<div class="input-group" style="position:absolute;bottom:0">
-					<textarea class="form-control"></textarea>
-					<button class="btn btn-primary">Envoyer</button>
-				</div>
+			
+				    {{form_start(formMessage)}}
+					    <div class="input-group mb-0">
+					        {{ form_widget(formMessage.contenu, { 'attr': {
+                                'placeholder': 'Ecrivez votre message ...'} }) 
+                            }}
+						
+						    {{ form_widget(formMessage.envoyer, { 'label': 'Envoyer' }) }}
+					    </div>
+				    {{form_end(formMessage)}}
+				
 			</div>
 		</div>
 	</div>
