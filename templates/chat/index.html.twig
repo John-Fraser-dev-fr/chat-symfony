@@ -11,19 +11,23 @@
 		<div class="container d-inline-flex" style="height:600px">
 			<div class="col-3 bg-primary">
 				<h4 class="text-center text-light p-3">Utilisateurs</h4>
+                {% for utilisateur in utilisateurs %}
+                    <div class="d-flex">
+                        <div class="px-3"><i class="bi bi-circle-fill" style="color:green"></i></div>
+                        <div class="text-light px-2">{{utilisateur.prenom}} {{utilisateur.nom}}</div>
+                    </div>
+                {% endfor %}
 			</div>
 			<div class="col-9 bg-light" style="position:relative">
 				<div class="h-100 p-3" style="overflow-x:hidden;overflow-y:scroll">
 					{% for message in messages %}
-						<div>
-							<div>
+							<div class="bg-white mb-3">
 								<div><b>{{message.user.prenom}}
 									{{message.user.nom}}</b></div>
 								<div>{{message.contenu}}</div>
 								<div><small>{{message.date | date('d/m/Y à H:i')}}</small></div>
 
 							</div>
-						</div>
 					{% endfor %}
 				</div>
 				<div class="input-group" style="position:absolute;bottom:0">

@@ -22,21 +22,42 @@
 					</button>
 					<div class="collapse navbar-collapse" id="navbarColor01">
 						<ul class="navbar-nav me-auto">
-							<li class="nav-item">
-								<a class="nav-link" href="{{path('inscription')}}">Inscription</a>
-							</li>
-							<li class="nav-item">
-								<a class="nav-link" href="{{path('connexion')}}">Connexion</a>
-							</li>
-							<li class="nav-item">
-								<a class="nav-link" href="#">Déconnexion</a>
-							</li>
-
+						    {% if not app.user %}
+							    <li class="nav-item">
+								    <a class="nav-link" href="{{path('inscription')}}">Inscription</a>
+							    </li>
+							    <li class="nav-item">
+								    <a class="nav-link" href="{{path('connexion')}}">Connexion</a>
+							    </li>
+							{% else %}
+							    <li class="nav-item">
+								    <a class="nav-link" href="{{path('deconnexion')}}">Déconnexion</a>
+							    </li>
+							    <li>
+							        <a class="nav-link active position-absolute end-0">Bonjour {{app.user.prenom}} {{app.user.nom}}</a>
+							    </li>
+							{% endif %}
 						</ul>
 
 					</div>
 				</div>
 			</nav>
+
+			{% for message in app.flashes('success') %}
+				<div class="alert alert-success alert-dismissible fade show">
+				    {{ message }}
+				    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+					
+				</div>
+			{% endfor %}
+
+			{% for message in app.flashes('danger') %}
+				<div class="alert alert-danger alert-dismissible fade show">
+				    {{ message }}
+				    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+				
+				</div>
+			{% endfor %}
 			<div class="container"> {% block body %}{% endblock %}
 				</div>
 
