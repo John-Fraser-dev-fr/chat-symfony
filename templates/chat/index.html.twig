@@ -3,47 +3,34 @@
 {% block title %}{% endblock %}
 
 {% block body %}
+	<h1 class="text-center mt-5">Bienvenue sur le Chat !</h1>
 
-	<h1 class="text-center mt-3">Bienvenue sur le chat</h1>
+	<div class="container mt-5 bg-light col-6 p-3">
 
-
-	<div class="container mt-5">
-		<div class="container d-inline-flex" style="height:600px">
-			<div class="col-3 bg-primary">
-				<h4 class="text-center text-light p-3">Utilisateurs</h4>
-                {% for utilisateur in utilisateurs %}
-                    <div class="d-flex">
-                        <div class="px-3"><i class="bi bi-circle-fill" style="color:green"></i></div>
-                        <div class="text-light px-2">{{utilisateur.prenom}} {{utilisateur.nom}}</div>
-                    </div>
-                {% endfor %}
-			</div>
-			<div class="col-9 h-100 bg-light" >
-				<div class="h-100 p-3" style="overflow-x:hidden;overflow-y:scroll">
-					{% for message in messages %}
-							<div class="bg-white mb-3">
-								<div><b>{{message.user.prenom}}
-									{{message.user.nom}}</b></div>
-								<div>{{message.contenu}}</div>
-								<div><small>{{message.date | date('d/m/Y à H:i')}}</small></div>
-
-							</div>
-					{% endfor %}
-				</div>
+        <div class="container">
+            <h4>Déjà membre ? Connectez-vous</h4> 
 			
-				    {{form_start(formMessage)}}
-					    <div class="input-group mb-0">
-					        {{ form_widget(formMessage.contenu, { 'attr': {
-                                'placeholder': 'Ecrivez votre message ...'} }) 
-                            }}
-						
-						    {{ form_widget(formMessage.envoyer, { 'label': 'Envoyer' }) }}
-					    </div>
-				    {{form_end(formMessage)}}
-				
-			</div>
-		</div>
-	</div>
+            <form method="POST" action="{{ path('connexion')}}">
+                <div class="form-group">
+                    <label >Email</label>
+                    <input id="username" name="_username" type="text" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label for="exampleInputPassword1">Mot de passe</label>
+                    <input id="password" name="_password" type="password" class="form-control">
+                </div>
+				 <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+                <button type="submit" class="btn btn-primary mt-2" name="login">Connexion</button>
+            </form>
+        </div>
 
+       
 
+        <div class="container mt-4">
+            <h4>Nouveau membre</h4>
+            <p style="line-height: 1.5; font-size: .8125rem">Devenez membre dès aujourd'hui – C'est rapide et gratuit !</p>
+            <a href="{{path('inscription')}}"> <button class="btn btn-primary" style="width:100%" type="button">Inscrivez-vous</button></a>
+        </div>
+
+    </div>
 {% endblock %}

@@ -34,6 +34,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: Message::class, orphanRemoval: true)]
     private $messages;
 
+    #[ORM\Column(type: 'boolean')]
+    private $isActived;
+
+
     public function __construct()
     {
         $this->messages = new ArrayCollection();
@@ -146,4 +150,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
         return $this;
     }
+
+    public function getIsActived(): ?bool
+    {
+        return $this->isActived;
+    }
+
+    public function setIsActived(bool $isActived): self
+    {
+        $this->isActived = $isActived;
+
+        return $this;
+    }
+
+   
 }

@@ -1,0 +1,53 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{% endblock %}
+
+{% block body %}
+
+	<h1 class="text-center mt-3">Bienvenue sur le chat</h1>
+
+
+	<div class="container mt-5">
+		<div class="container d-inline-flex" style="height:600px">
+			<div class="col-3 h-100 bg-primary">
+				<h4 class="text-center text-light p-3">Utilisateurs</h4>
+                {% for utilisateur in utilisateurs %}
+                    <div class="d-flex">
+                        {% if  utilisateur.isActived == true %}
+                            <div class="px-3"><i class="bi bi-circle-fill" style="color:green"></i></div>
+                        {% else %}
+                            <div class="px-3"><i class="bi bi-circle-fill" style="color:red"></i></div>
+                        {% endif %}
+                        <div class="text-light px-2">{{utilisateur.prenom}} {{utilisateur.nom}}</div>
+                    </div>
+                {% endfor %}
+			</div>
+			<div class="col-9 h-100 bg-light" >
+				<div class="h-100 p-3" style="overflow-x:hidden;overflow-y:scroll">
+					{% for message in messages %}
+							<div class="bg-white mb-3">
+								<div><b>{{message.user.prenom}}
+									{{message.user.nom}}</b></div>
+								<div>{{message.contenu}}</div>
+								<div><small>{{message.date | date('d/m/Y à H:i')}}</small></div>
+
+							</div>
+					{% endfor %}
+				</div>
+			
+				    {{form_start(formMessage)}}
+					    <div class="input-group mb-0">
+					        {{ form_widget(formMessage.contenu, { 'attr': {
+                                'placeholder': 'Ecrivez votre message ...'} }) 
+                            }}
+						
+						    {{ form_widget(formMessage.envoyer, { 'label': 'Envoyer' }) }}
+					    </div>
+				    {{form_end(formMessage)}}
+				
+			</div>
+		</div>
+	</div>
+
+
+{% endblock %}

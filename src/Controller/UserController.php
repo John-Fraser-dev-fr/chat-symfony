@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Form\UserType;
+use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -28,7 +29,10 @@ class UserController extends AbstractController
         {
             //Hash mot de passe
             $hash = $encoder->hashPassword($user, $user->getPassword());
-            $user->setPassword($hash);
+            
+            $user->setPassword($hash)
+                ->setIsActived(false)
+            ;
 
             //Enregistrement en BDD
             $entityManager->persist($user);
@@ -36,7 +40,7 @@ class UserController extends AbstractController
 
             //Message Flash
             $this->addFlash('success', 'Votre inscription a bien été prit en compte !');
-            return $this->redirectToRoute('connexion');
+            return $this->redirectToRoute('chat_index');
         }
 
         return $this->render('user/inscription.html.twig', [
@@ -52,11 +56,14 @@ class UserController extends AbstractController
 
         //Dernier nom entré par l'utilisateur
         $lastUsername = $auth->getLastUsername();
-
-        return $this->render('user/connexion.html.twig', [
+  
+        return $this->render('chat/index.html.twig', [
             'error' => $error,
-            'lastUsername' => $lastUsername
+            'lastUsername' => $lastUsername,
+      
         ]);
+              
+       
     }
 
     #[Route('/deconnexion', name: 'deconnexion')]
