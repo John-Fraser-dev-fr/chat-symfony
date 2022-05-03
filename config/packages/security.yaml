@@ -8,9 +8,10 @@ security:
     # https://symfony.com/doc/current/security.html#loading-the-user-the-user-provider
     providers:
         users_in_memory: { memory: null }
-        #Création d'un provider relié à l'entité User pour authentification
+        #Création d'un provider
         user_provider:
             entity:
+                #Charge l'entité User en utilisant l'email comme "identifiant"
                 class: App\Entity\User
                 property: email
 
@@ -30,6 +31,7 @@ security:
             
             logout:
                 path: deconnexion
+                target: chat_index
 
             # activate different ways to authenticate
             # https://symfony.com/doc/current/security.html#the-firewall

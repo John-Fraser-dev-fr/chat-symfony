@@ -34,6 +34,7 @@ class UserController extends AbstractController
                 ->setIsActived(false)
             ;
 
+
             //Enregistrement en BDD
             $entityManager->persist($user);
             $entityManager->flush();
@@ -56,10 +57,15 @@ class UserController extends AbstractController
 
         //Dernier nom entré par l'utilisateur
         $lastUsername = $auth->getLastUsername();
+
+        
+
+
   
         return $this->render('chat/index.html.twig', [
             'error' => $error,
             'lastUsername' => $lastUsername,
+      
       
         ]);
               
@@ -69,6 +75,10 @@ class UserController extends AbstractController
     #[Route('/deconnexion', name: 'deconnexion')]
     public function deconnexion()
     {
+        $user = $this->getUser();
+
+        
+
         return $this->redirectToRoute('chat_index');
     }
 }

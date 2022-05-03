@@ -37,10 +37,22 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: 'boolean')]
     private $isActived;
 
+    #[ORM\OneToMany(mappedBy: 'expediteur', targetEntity: MessagePrive::class)]
+    private $sent;
+
+    #[ORM\OneToMany(mappedBy: 'destinataire', targetEntity: MessagePrive::class)]
+    private $received;
+
+   
+
 
     public function __construct()
     {
         $this->messages = new ArrayCollection();
+        $this->sent = new ArrayCollection();
+        $this->received = new ArrayCollection();
+        
+       
     }
 
     public function getId(): ?int
@@ -162,6 +174,70 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
         return $this;
     }
+
+    /**
+     * @return Collection<int, MessagePrive>
+     */
+    public function getSent(): Collection
+    {
+        return $this->sent;
+    }
+
+    public function addSent(MessagePrive $sent): self
+    {
+        if (!$this->sent->contains($sent)) {
+            $this->sent[] = $sent;
+            $sent->setExpediteur($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSent(MessagePrive $sent): self
+    {
+        if ($this->sent->removeElement($sent)) {
+            // set the owning side to null (unless already changed)
+            if ($sent->getExpediteur() === $this) {
+                $sent->setExpediteur(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, MessagePrive>
+     */
+    public function getReceived(): Collection
+    {
+        return $this->received;
+    }
+
+    public function addReceived(MessagePrive $received): self
+    {
+        if (!$this->received->contains($received)) {
+            $this->received[] = $received;
+            $received->setDestinataire($this);
+        }
+
+        return $this;
+    }
+
+    public function removeReceived(MessagePrive $received): self
+    {
+        if ($this->received->removeElement($received)) {
+            // set the owning side to null (unless already changed)
+            if ($received->getDestinataire() === $this) {
+                $received->setDestinataire(null);
+            }
+        }
+
+        return $this;
+    }
+
+   
+
+  
 
    
 }
