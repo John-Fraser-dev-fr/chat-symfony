@@ -8,15 +8,16 @@
 
 
 
+
 	<div class="container mt-5">
 		<div class="container d-inline-flex" style="height:600px">
 			<div class="col-3 h-100 bg-primary">
 				<h4 class="text-center text-light p-3">Utilisateurs</h4>
                 {% for utilisateur in utilisateurs %}
                     <div class="d-flex">
-                        {% if utilisateur.isactived == true %}
+                        {% if app.session.get('online') == true %}
                             <div class="px-3"><i class="bi bi-circle-fill" style="color:green"></i></div>
-                        {% elseif utilisateur.isactived == false %}
+                       {% else %}
                             <div class="px-3"><i class="bi bi-circle-fill" style="color:red"></i></div>
                         {% endif %}
                         <div class="text-light px-2">{{utilisateur.prenom}} {{utilisateur.nom}}</div>

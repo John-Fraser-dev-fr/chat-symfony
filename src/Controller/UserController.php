@@ -10,7 +10,9 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
 class UserController extends AbstractController
@@ -25,15 +27,12 @@ class UserController extends AbstractController
 
         //Analyse de la requête
         $formUser->handleRequest($request);
-        if($formUser->isSubmitted() && $formUser->isValid())
-        {
+        if ($formUser->isSubmitted() && $formUser->isValid()) {
             //Hash mot de passe
             $hash = $encoder->hashPassword($user, $user->getPassword());
-            
-            $user->setPassword($hash)
-                ->setIsActived(false)
-            ;
 
+            $user->setPassword($hash)
+                ->setIsActived(false);
 
             //Enregistrement en BDD
             $entityManager->persist($user);
@@ -50,35 +49,68 @@ class UserController extends AbstractController
     }
 
     #[Route('/connexion', name: 'connexion')]
-    public function connexion(AuthenticationUtils $auth): Response
+    public function connexion(Request $request, AuthenticationUtils $auth, AuthorizationCheckerInterface $authorization, UserRepository $repoUser, EntityManagerInterface $entity): Response
     {
+
+        // Si le visiteur est identifié, on le redirige vers l'accueil
+        if ($authorization->isGranted('IS_AUTHENTICATED_FULLY')) {
+
+            //récupére la session
+            $session = $request->getSession();
+            //récupére la variable de session
+            $sessionUser = $session->get('online');
+
+            //Si elle n'existe pas on initialise a true
+            if(!isset($sessionUser))
+            {
+                //on initialise a true
+                $session->set('online', true);
+            }
+
+           
+
+            
+            
+
+
+            //Récupére l'utilisateur connecté
+            $userId = $this->getUser()->getUserIdentifier();
+            $user = $repoUser->find($userId);
+
+            //Modification
+            $user->setIsActived(true);
+            //Enregistrement en BDD
+            $entity->persist($user);
+            $entity->flush();
+
+            return $this->redirectToRoute('chat_group');
+        }
+
+
         //Obtenir une erreur de connexion s'il y en a une
         $error = $auth->getLastAuthenticationError();
 
         //Dernier nom entré par l'utilisateur
         $lastUsername = $auth->getLastUsername();
 
-        
 
 
-  
+
         return $this->render('chat/index.html.twig', [
             'error' => $error,
             'lastUsername' => $lastUsername,
-      
-      
+
+
+
         ]);
-              
-       
     }
 
     #[Route('/deconnexion', name: 'deconnexion')]
     public function deconnexion()
     {
-        $user = $this->getUser();
-
-        
-
+       
         return $this->redirectToRoute('chat_index');
     }
+
+    
 }
