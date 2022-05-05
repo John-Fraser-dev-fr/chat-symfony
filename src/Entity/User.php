@@ -34,14 +34,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: Message::class, orphanRemoval: true)]
     private $messages;
 
-    #[ORM\Column(type: 'boolean')]
-    private $isActived;
 
     #[ORM\OneToMany(mappedBy: 'expediteur', targetEntity: MessagePrive::class)]
     private $sent;
 
     #[ORM\OneToMany(mappedBy: 'destinataire', targetEntity: MessagePrive::class)]
     private $received;
+
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    private $session_id;
+
+    #[ORM\Column(type: 'datetime', nullable: true)]
+    private $session_update;
 
    
 
@@ -163,17 +167,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function getIsActived(): ?bool
-    {
-        return $this->isActived;
-    }
-
-    public function setIsActived(bool $isActived): self
-    {
-        $this->isActived = $isActived;
-
-        return $this;
-    }
+   
 
     /**
      * @return Collection<int, MessagePrive>
@@ -231,6 +225,30 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
                 $received->setDestinataire(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getSessionId(): ?string
+    {
+        return $this->session_id;
+    }
+
+    public function setSessionId(string $session_id): self
+    {
+        $this->session_id = $session_id;
+
+        return $this;
+    }
+
+    public function getSessionUpdate(): ?\DateTimeInterface
+    {
+        return $this->session_update;
+    }
+
+    public function setSessionUpdate(?\DateTimeInterface $session_update): self
+    {
+        $this->session_update = $session_update;
 
         return $this;
     }

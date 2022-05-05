@@ -9,11 +9,12 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
-use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
 class UserController extends AbstractController
 {
@@ -31,8 +32,8 @@ class UserController extends AbstractController
             //Hash mot de passe
             $hash = $encoder->hashPassword($user, $user->getPassword());
 
-            $user->setPassword($hash)
-                ->setIsActived(false);
+            $user->setPassword($hash);
+                
 
             //Enregistrement en BDD
             $entityManager->persist($user);
@@ -49,41 +50,32 @@ class UserController extends AbstractController
     }
 
     #[Route('/connexion', name: 'connexion')]
-    public function connexion(Request $request, AuthenticationUtils $auth, AuthorizationCheckerInterface $authorization, UserRepository $repoUser, EntityManagerInterface $entity): Response
+    public function connexion(SessionInterface $session, UserRepository $repoUser, AuthenticationUtils $auth, AuthorizationCheckerInterface $authorization, EntityManagerInterface $entity): Response
     {
 
-        // Si le visiteur est identifié, on le redirige vers l'accueil
-        if ($authorization->isGranted('IS_AUTHENTICATED_FULLY')) {
+        // Si le visiteur est identifié, on le redirige vers le groupe
+        if ($authorization->isGranted('IS_AUTHENTICATED_FULLY')) 
+        {
+            //Récupére l'id de session
+            $session_id = $session->getId();
 
-            //récupére la session
-            $session = $request->getSession();
-            //récupére la variable de session
-            $sessionUser = $session->get('online');
+            //Récupére l'utilisateur
+            $user = $repoUser->find($this->getUser());
 
-            //Si elle n'existe pas on initialise a true
-            if(!isset($sessionUser))
-            {
-                //on initialise a true
-                $session->set('online', true);
-            }
+            //Modif bdd
+            $user->setSessionId($session_id)
+                ->setSessionUpdate(new \DateTime())
+            ;
 
-           
-
-            
-            
-
-
-            //Récupére l'utilisateur connecté
-            $userId = $this->getUser()->getUserIdentifier();
-            $user = $repoUser->find($userId);
-
-            //Modification
-            $user->setIsActived(true);
-            //Enregistrement en BDD
-            $entity->persist($user);
-            $entity->flush();
+           //Enregistrement en BDD
+           $entity->persist($user);
+           $entity->flush();
 
             return $this->redirectToRoute('chat_group');
+        }
+        else
+        {
+            return $this->redirectToRoute('chat_index');
         }
 
 
@@ -106,9 +98,23 @@ class UserController extends AbstractController
     }
 
     #[Route('/deconnexion', name: 'deconnexion')]
-    public function deconnexion()
+    public function deconnexion(Request $request)
     {
-       
+    
+        //récupére la session
+        $session = $request->getSession();
+        //récupére la variable de session
+        $sessionUser = $session->get('online');
+
+        //Si elle existe
+        if(isset($sessionUser))
+        {
+            $session->clear();
+        }
+
+        dd($session);
+
+
         return $this->redirectToRoute('chat_index');
     }
 

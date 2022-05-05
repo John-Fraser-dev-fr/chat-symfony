@@ -10,6 +10,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\Annotation\Route;
 
 class ChatController extends AbstractController
@@ -26,42 +27,39 @@ class ChatController extends AbstractController
     #[Route('/chat/group', name: 'chat_group')]
     public function group(MessageRepository $repoMessage, UserRepository $repoUser, Request $request, EntityManagerInterface $entity): Response
     {
-        if (!$this->getUser()) 
-        {
-            return $this->redirectToRoute('chat_index');
+
+        
+
+
+        //Récupére tous les messages
+        $messages = $repoMessage->findby([], ['date' => 'desc']);
+
+        //Récupére tous les utilisateurs
+        $utilisateurs = $repoUser->findAll();
+
+        //Nouveau message
+        $message = new Message();
+        //Formulaire relié à l'éntité Message
+        $formMessage = $this->createForm(MessageType::class, $message);
+
+        //Analyse de la requête
+        $formMessage->handleRequest($request);
+        if ($formMessage->isSubmitted() && $formMessage->isValid()) {
+            //Modification
+            $message->setUser($this->getUser())
+                ->setDate(new \DateTime());
+
+            //Enregistrement en BDD
+            $entity->persist($message);
+            $entity->flush();
+
+            return $this->redirectToRoute('chat_group');
         }
-        else
-        {
-            //Récupére tous les messages
-            $messages = $repoMessage->findby([], ['date' => 'desc']);
 
-            //Récupére tous les utilisateurs
-            $utilisateurs = $repoUser->findAll();
-
-            //Nouveau message
-            $message = new Message();
-            //Formulaire relié à l'éntité Message
-            $formMessage = $this->createForm(MessageType::class, $message);
-
-            //Analyse de la requête
-            $formMessage->handleRequest($request);
-            if ($formMessage->isSubmitted() && $formMessage->isValid()) {
-                //Modification
-                $message->setUser($this->getUser())
-                    ->setDate(new \DateTime());
-
-                //Enregistrement en BDD
-                $entity->persist($message);
-                $entity->flush();
-
-                return $this->redirectToRoute('chat_group');
-            }
-
-            return $this->render('chat/group.html.twig', [
-                'messages' => $messages,
-                'utilisateurs' => $utilisateurs,
-                'formMessage' => $formMessage->createView()
-            ]);
-        }
+        return $this->render('chat/group.html.twig', [
+            'messages' => $messages,
+            'utilisateurs' => $utilisateurs,
+            'formMessage' => $formMessage->createView()
+        ]);
     }
 }

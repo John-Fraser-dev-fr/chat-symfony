@@ -13,9 +13,10 @@
 		<div class="container d-inline-flex" style="height:600px">
 			<div class="col-3 h-100 bg-primary">
 				<h4 class="text-center text-light p-3">Utilisateurs</h4>
+
                 {% for utilisateur in utilisateurs %}
                     <div class="d-flex">
-                        {% if app.session.get('online') == true %}
+                        {% if utilisateur.sessionId == app.session.id %}
                             <div class="px-3"><i class="bi bi-circle-fill" style="color:green"></i></div>
                        {% else %}
                             <div class="px-3"><i class="bi bi-circle-fill" style="color:red"></i></div>
@@ -32,6 +33,7 @@
 									{{message.user.nom}}</b></div>
 								<div>{{message.contenu}}</div>
 								<div><small>{{message.date | date('d/m/Y à H:i')}}</small></div>
+
 
 							</div>
 					{% endfor %}
