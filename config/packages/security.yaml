@@ -33,6 +33,7 @@ security:
             logout:
                 path: deconnexion
                 target: /
+                invalidate_session: false
                 
                 
                 

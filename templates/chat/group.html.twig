@@ -16,7 +16,7 @@
 
                 {% for utilisateur in utilisateurs %}
                     <div class="d-flex">
-                        {% if utilisateur.sessionId == app.session.id %}
+                        {% if utilisateur.sessionId %}
                             <div class="px-3"><i class="bi bi-circle-fill" style="color:green"></i></div>
                        {% else %}
                             <div class="px-3"><i class="bi bi-circle-fill" style="color:red"></i></div>

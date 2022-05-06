@@ -30,6 +30,7 @@ class ChatController extends AbstractController
 
         
 
+        $this->denyAccessUnlessGranted('ROLE_USER');
 
         //Récupére tous les messages
         $messages = $repoMessage->findby([], ['date' => 'desc']);

@@ -98,25 +98,13 @@ class UserController extends AbstractController
     }
 
     #[Route('/deconnexion', name: 'deconnexion')]
-    public function deconnexion(Request $request)
+    public function deconnexion()
     {
     
-        //récupére la session
-        $session = $request->getSession();
-        //récupére la variable de session
-        $sessionUser = $session->get('online');
-
-        //Si elle existe
-        if(isset($sessionUser))
-        {
-            $session->clear();
-        }
-
-        dd($session);
-
-
         return $this->redirectToRoute('chat_index');
     }
+
+    
 
     
 }
