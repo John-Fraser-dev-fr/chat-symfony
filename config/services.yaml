@@ -21,9 +21,9 @@ services:
             - '../src/Kernel.php'
 
    
-    App\Listener\LogoutListener:
+    App\EventListener\LogoutListener:
         tags:
-            - { name: kernel.event_listener, event: kernel.logout , method: logout }
+            - { name: kernel.event_listener, event: kernel.controller }
 
    
 
