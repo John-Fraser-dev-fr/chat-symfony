@@ -56,15 +56,12 @@ class UserController extends AbstractController
         // Si le visiteur est identifié, on le redirige vers le groupe
         if ($authorization->isGranted('IS_AUTHENTICATED_FULLY')) 
         {
-            //Récupére l'id de session
-            $session_id = $session->getId();
 
             //Récupére l'utilisateur
             $user = $repoUser->find($this->getUser());
 
             //Modif bdd
-            $user->setSessionId($session_id)
-                ->setSessionUpdate(new \DateTime())
+            $user->setSessionUpdate(new \DateTime())
             ;
 
            //Enregistrement en BDD

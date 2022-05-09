@@ -41,9 +41,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(mappedBy: 'destinataire', targetEntity: MessagePrive::class)]
     private $received;
 
-    #[ORM\Column(type: 'string', length: 255, nullable: true)]
-    private $session_id;
-
     #[ORM\Column(type: 'datetime', nullable: true)]
     private $session_update;
 
@@ -229,17 +226,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function getSessionId(): ?string
-    {
-        return $this->session_id;
-    }
 
-    public function setSessionId(string $session_id): self
-    {
-        $this->session_id = $session_id;
-
-        return $this;
-    }
 
     public function getSessionUpdate(): ?\DateTimeInterface
     {
@@ -251,6 +238,15 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->session_update = $session_update;
 
         return $this;
+    }
+
+
+    public function isActive()
+    {
+        // Délai pendant lequel l'utilisateur est considéré comme actif
+        $delai = new \DateTime('5 minutes ago');
+
+        return ($this->getSessionUpdate() > $delai);
     }
 
    
