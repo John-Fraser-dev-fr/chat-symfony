@@ -7,14 +7,16 @@
 	<div class="container mt-5">
 		<div class="container d-inline-flex" style="height:600px">
 			<div class="col-3 h-100 bg-primary">
-				<h4 class="text-center text-light p-3"></h4>
+				<h5 class="text-center text-light p-3"> {{destinataire.prenom}} {{destinataire.nom}}</h5>
 			</div>
 			<div class="col-9 h-100 bg-light">
 				<div class="h-100 p-3" style="overflow-x:hidden;overflow-y:scroll">
                
                     
                 
-					{% for messagePrive in app.user.received|reverse %}
+					{% for messagePrive in messagePrives %}
+                   
+                   
 						<div class="bg-white mb-3">
 							<div><b>{{messagePrive.expediteur.prenom}} {{messagePrive.expediteur.nom}}</b></div>
 
@@ -22,23 +24,12 @@
 							<div>
 								<small>{{messagePrive.date | date('d/m/Y à H:i')}}</small>
 							</div>
-
-
 						</div>
+                  
 					{% endfor %}
+
                     
-                    {% for messagePrive in app.user.sent %}
-						<div class="bg-white mb-3">
-							<div><b>{{messagePrive.expediteur.prenom}} {{messagePrive.expediteur.nom}}</b></div>
-
-							<div>{{messagePrive.contenu}}</div>
-							<div>
-								<small>{{messagePrive.date | date('d/m/Y à H:i')}}</small>
-							</div>
-
-
-						</div>
-					{% endfor %}
+                    
 
       
                     

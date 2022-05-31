@@ -51,7 +51,13 @@ class MessagePriveController extends AbstractController
             $entity->flush();
         }
 
-        $messagePrives = $msgPriveRepo->findBy(['destinataire'=>$destinataire, 'expediteur' => $expediteur]);
+
+
+
+        $messagePrives = $msgPriveRepo->findBy(['destinataire'=>$destinataire, 'expediteur' => $expediteur ]);
+        
+
+        
 
      
 
@@ -65,6 +71,8 @@ class MessagePriveController extends AbstractController
         return $this->render('message_prive/add.html.twig',[
             'formMessagePrivee' => $formMessagePrivee->createView(),
             'messagePrives' => $messagePrives,
+            'destinataire' => $destinataire,
+           
          
 
         ]);

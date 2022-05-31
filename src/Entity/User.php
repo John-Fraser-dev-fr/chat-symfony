@@ -228,6 +228,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
 
 
+
+
     public function getSessionUpdate(): ?\DateTimeInterface
     {
         return $this->session_update;
