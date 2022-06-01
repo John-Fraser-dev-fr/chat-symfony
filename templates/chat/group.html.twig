@@ -21,7 +21,7 @@
                        {% else %}
                             <div class="px-3"><i class="bi bi-circle-fill" style="color:red"></i></div>
                         {% endif %}
-                        <div class="text-light px-2"><a href="{{path( 'messagerie_add', {'id' : utilisateur.id} )}}">{{utilisateur.prenom}} {{utilisateur.nom}}</a></div>
+                        <div class="text-light px-2"><a href="{{path( 'messagerie_add', {'id' : utilisateur.id } )}}">{{utilisateur.prenom}} {{utilisateur.nom}}</a></div>
                     </div>
                 {% endfor %}
 			</div>

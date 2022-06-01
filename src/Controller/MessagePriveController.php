@@ -28,6 +28,7 @@ class MessagePriveController extends AbstractController
     {
         //Récupére l'expéditeur
         $expediteur = $this->getUser();
+
         //Récupére le destinataire
         $destinataire = $repoUser->find($id);
 
@@ -52,20 +53,7 @@ class MessagePriveController extends AbstractController
         }
 
 
-
-
-        $messagePrives = $msgPriveRepo->findBy(['destinataire'=>$destinataire, 'expediteur' => $expediteur ]);
-        
-
-        
-
-     
-
-        
-
-
-        
-
+        $messagePrives = $msgPriveRepo->findBetweenUsers($expediteur, $destinataire);
         
 
         return $this->render('message_prive/add.html.twig',[

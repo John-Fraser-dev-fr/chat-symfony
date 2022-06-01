@@ -47,22 +47,32 @@ class MessagePriveRepository extends ServiceEntityRepository
         }
     }
 
-    // /**
-    //  * @return MessagePrive[] Returns an array of MessagePrive objects
-    //  */
-    /*
-    public function findByExampleField($value)
+    /**
+     * return les messages privées entre utilisateurs
+     */
+
+
+    public function findBetweenUsers($expediteur, $destinataire)
     {
-        return $this->createQueryBuilder('m')
-            ->andWhere('m.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('m.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
+        $entityManager = $this->getEntityManager();
+
+        $query = $entityManager->createQuery(
+            'SELECT m
+            FROM App\Entity\MessagePrive m
+            WHERE m.expediteur = :expediteur 
+            AND m.destinataire = :destinataire 
+            OR m.expediteur = :destinataire
+            AND m.destinataire = :expediteur
+            ORDER BY m.date ASC'
+        )
+        ->setParameter(':expediteur' , $expediteur)
+        ->setParameter(':destinataire' , $destinataire);
+        
+    
+        // returns an array of Product objects
+        return $query->getResult();
     }
-    */
+
 
     /*
     public function findOneBySomeField($value): ?MessagePrive

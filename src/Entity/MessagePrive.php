@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\MessagePriveRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\Mapping\Id;
 
 #[ORM\Entity(repositoryClass: MessagePriveRepository::class)]
 class MessagePrive
@@ -54,7 +55,7 @@ class MessagePrive
         return $this;
     }
 
-    public function getExpediteur(): ?User
+    public function getExpediteur()
     {
         return $this->expediteur;
     }
