@@ -44,6 +44,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: 'datetime', nullable: true)]
     private $session_update;
 
+    #[ORM\Column(type: 'json')]
+    private $roles = [];
+
+   
+   
+
    
 
 
@@ -121,8 +127,21 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function getRoles(): array
     {
-        return ['ROLE_USER'];
+        $roles = $this->roles;
+       
+        $roles[] = 'ROLE_USER';
+
+        return array_unique($roles);
     }
+
+    public function setRoles(array $roles): self
+    {
+        $this->roles = $roles;
+
+        return $this;
+    }
+
+  
 
     public function getUserIdentifier(): string
     {
@@ -251,6 +270,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
         return ($this->getSessionUpdate() > $delai);
     }
+
+    
+
+    
 
    
    
