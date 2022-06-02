@@ -67,9 +67,24 @@ class MessagePriveRepository extends ServiceEntityRepository
         )
         ->setParameter(':expediteur' , $expediteur)
         ->setParameter(':destinataire' , $destinataire);
-        
     
-        // returns an array of Product objects
+    
+        return $query->getResult();
+    }
+
+    public function findAllByUser($user)
+    {
+        $entityManager = $this->getEntityManager();
+
+        $query = $entityManager->createQuery(
+            'SELECT m
+            FROM App\Entity\MessagePrive m
+            WHERE  m.destinataire = :user
+            GROUP BY m.expediteur
+            ORDER BY m.date ASC'
+        )
+        ->setParameter(':user' , $user);
+    
         return $query->getResult();
     }
 

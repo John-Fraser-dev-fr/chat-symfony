@@ -15,13 +15,7 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class MessagePriveController extends AbstractController
 {
-    #[Route('/messagerie', name: 'messagerie_index')]
-    public function index(): Response
-    {
-        return $this->render('message_prive/index.html.twig', [
-            'controller_name' => 'MessagePriveController',
-        ]);
-    }
+    
 
     #[Route('/messagerie/add/{id}', name: 'messagerie_add')]
     public function add(UserRepository $repoUser,MessagePriveRepository $msgPriveRepo, $id, Request $request, EntityManagerInterface $entity)
@@ -59,10 +53,24 @@ class MessagePriveController extends AbstractController
         return $this->render('message_prive/add.html.twig',[
             'formMessagePrivee' => $formMessagePrivee->createView(),
             'messagePrives' => $messagePrives,
-            'destinataire' => $destinataire,
-           
-         
+            'destinataire' => $destinataire
+        ]);
+    }
 
+
+    #[Route('/messagerie', name: 'messagerie_index')]
+    public function index(MessagePriveRepository $msgPriveRepo): Response
+    {
+
+        $user = $this->getUser();
+
+        $messagePrivesByUsers = $msgPriveRepo->findAllByUser($user);
+        
+
+       
+
+        return $this->render('message_prive/index.html.twig',[
+            'messagePrivesByUsers' => $messagePrivesByUsers
         ]);
     }
 }

@@ -4,7 +4,23 @@
 
 {% block body %}
 	<div class="container mt-5">
-    <h4>Conversations privées :</h4>
 
-    </div>
+		<h4 class="mb-5">Conversations privées :</h4>
+
+
+		<ul class="list-group col-6">
+        {% for messagePrivesByUser in messagePrivesByUsers %}
+           <a class="text-decoration-none" href="{{path( 'messagerie_add', {'id' : messagePrivesByUser.expediteur.id } )}}">
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+				<p class="m-0">{{messagePrivesByUser.expediteur.prenom}} {{messagePrivesByUser.expediteur.nom}}</p>
+				<span>
+             <i class="bi bi-arrow-right-circle-fill "></i>
+                </span>
+			</li>
+            </a>
+        {% endfor %}
+			
+		</ul>
+
+	</div>
 {% endblock %}

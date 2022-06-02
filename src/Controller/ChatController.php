@@ -18,7 +18,15 @@ class ChatController extends AbstractController
     #[Route('/chat', name: 'chat_index')]
     public function index()
     {
-        return $this->render('chat/index.html.twig');
+        if($this->getUser())
+        {
+            return $this->redirectToRoute('chat_group');
+        }
+        else
+        {
+            return $this->render('chat/index.html.twig');
+        }
+       
     }
 
 
